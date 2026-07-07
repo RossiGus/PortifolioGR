@@ -72,6 +72,6 @@ O conteúdo textual já é o real; faltam apenas os assets e links que não esta
 
 > **Ao editar qualquer texto**, lembre de atualizar as duas versões (`pt` e `en`) no dicionário `I18N` em `script.js`.
 
-## 📝 Nota sobre o design
+## Link
 
-Esta versão substituiu um conceito anterior (tema dark-tech). O design atual foi fornecido como direção fechada e portado de um arquivo único para a estrutura de três arquivos acima, com uma camada extra de animações — ver [`docs/animacoes.md`](docs/animacoes.md).
+https://gustavorossi.vercel.app/
