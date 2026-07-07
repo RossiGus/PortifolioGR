@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Portfólio — Gustavo Rossi
 
 Portfólio de suporte técnico / análise de sistemas: página única, direção editorial (papel + cobalto, tipografia serifada), com animações reativas ao mouse e ao scroll, **tema claro/escuro** e **idiomas PT/EN**. Sem frameworks e sem dependências: HTML, CSS e JavaScript puros.
