@@ -1,0 +1,167 @@
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fine = matchMedia('(pointer: fine)').matches;
+
+/* ---------- reveal por scroll ---------- */
+const io = new IntersectionObserver((es) => {
+  es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: .15 });
+document.querySelectorAll('.reveal,.entry').forEach(el => io.observe(el));
+
+// stagger dos itens do índice de stack
+document.querySelectorAll('.index-list .row').forEach((r, i) => { r.style.transitionDelay = (i * 0.05) + 's'; });
+
+/* ---------- ticker de fólio na margem ---------- */
+const ticker = document.querySelector('.folio-ticker');
+const entries = [...document.querySelectorAll('.entry')];
+const workSec = document.getElementById('trabalho');
+if (ticker && workSec && entries.length && !reduce) {
+  const total = String(entries.length).padStart(2, '0');
+  new IntersectionObserver((es) => { es.forEach(e => ticker.classList.toggle('show', e.isIntersecting)); }, { threshold: 0 }).observe(workSec);
+  const curIO = new IntersectionObserver((es) => { es.forEach(e => {
+    if (e.isIntersecting) {
+      const n = String(entries.indexOf(e.target) + 1).padStart(2, '0');
+      ticker.textContent = 'Projeto ' + n + ' — ' + total;
+    }
+  }); }, { threshold: .5 });
+  entries.forEach(el => curIO.observe(el));
+}
+
+/* ---------- relógio ao vivo (dateline de São Paulo) ---------- */
+const clock = document.getElementById('clock');
+if (clock) {
+  const fmt = new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+  const tick = () => { clock.textContent = fmt.format(new Date()); };
+  tick();
+  setInterval(tick, 1000);
+}
+
+/* ---------- parallax do hero por ponteiro (rAF + lerp) ---------- */
+(function () {
+  const bg = document.querySelector('.hero-bg');
+  const hero = document.querySelector('.hero');
+  if (!bg || !hero || reduce || !fine) return;
+  let tx = 0, ty = 0, cx = 0, cy = 0;
+  hero.addEventListener('pointermove', e => {
+    const r = hero.getBoundingClientRect();
+    tx = (((e.clientX - r.left) / r.width) - .5) * 2 * 14;
+    ty = (((e.clientY - r.top) / r.height) - .5) * 2 * 14;
+  });
+  hero.addEventListener('pointerleave', () => { tx = 0; ty = 0; });
+  (function loop() {
+    cx += (tx - cx) * .08; cy += (ty - cy) * .08;
+    bg.style.setProperty('--px', cx.toFixed(2));
+    bg.style.setProperty('--py', cy.toFixed(2));
+    requestAnimationFrame(loop);
+  })();
+})();
+
+/* ---------- headline cinética: caracteres "entintam" perto do cursor ---------- */
+(function () {
+  const h1 = document.querySelector('.hero-title');
+  if (!h1 || reduce || !fine) return;
+
+  // quebra o conteúdo de cada linha em <span class="ch">, preservando o <em>
+  const makeChar = (ch, em) => {
+    const s = document.createElement('span');
+    s.className = 'ch' + (em ? ' em' : '');
+    s.textContent = ch;
+    return s;
+  };
+  h1.querySelectorAll('.hl > span').forEach(line => {
+    const frag = document.createDocumentFragment();
+    line.childNodes.forEach(node => {
+      if (node.nodeType === 3) {
+        for (const ch of node.textContent) frag.appendChild(makeChar(ch, false));
+      } else if (node.nodeType === 1) { // <em>
+        const em = node.cloneNode(false);
+        for (const ch of node.textContent) em.appendChild(makeChar(ch, true));
+        frag.appendChild(em);
+      }
+    });
+    line.replaceChildren(frag);
+  });
+
+  const chars = [...h1.querySelectorAll('.ch')];
+  const R = 150; // raio de influência do cursor
+  let centers = [];
+  const measure = () => { centers = chars.map(c => { const r = c.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }); };
+  const mix = f => `rgb(${Math.round(23 + 19 * f)},${Math.round(19 + 28 * f)},${Math.round(12 + 178 * f)})`; // ink -> cobalt
+
+  h1.addEventListener('pointerenter', measure);
+  addEventListener('resize', measure);
+  h1.addEventListener('pointermove', e => {
+    for (let i = 0; i < chars.length; i++) {
+      const c = centers[i]; if (!c) continue;
+      const f = Math.max(0, 1 - Math.hypot(e.clientX - c.x, e.clientY - c.y) / R);
+      chars[i].style.transform = f ? `translateY(${(-f * 10).toFixed(1)}px)` : '';
+      if (!chars[i].classList.contains('em')) chars[i].style.color = f ? mix(f) : '';
+    }
+  });
+  h1.addEventListener('pointerleave', () => chars.forEach(c => { c.style.transform = ''; if (!c.classList.contains('em')) c.style.color = ''; }));
+})();
+
+/* ---------- pull-quote de código: efeito máquina de escrever ao entrar em vista ---------- */
+(function () {
+  const el = document.querySelector('.pullcode');
+  if (!el) return;
+  const caret = el.querySelector('.caret');
+
+  // tokens (texto + classe de cor), reconstruídos para poder digitar
+  const tokens = [
+    { t: '// não é sobre o framework da moda.\n', c: 'c' },
+    { t: 'function ', c: 'k' }, { t: 'entregar(problema) {\n' },
+    { t: '  return ', c: 'k' }, { t: 'problema.resolvido && time.entende;\n' },
+    { t: '}' },
+  ];
+
+  const build = (upTo) => {
+    // upTo = número total de caracteres a mostrar (Infinity = tudo)
+    el.textContent = '';
+    let shown = 0;
+    for (const tok of tokens) {
+      if (shown >= upTo) break;
+      const take = Math.min(tok.t.length, upTo - shown);
+      const span = document.createElement('span');
+      if (tok.c) span.className = tok.c;
+      span.textContent = tok.t.slice(0, take);
+      el.appendChild(span);
+      shown += take;
+    }
+    el.appendChild(caret);
+  };
+
+  const totalChars = tokens.reduce((n, t) => n + t.t.length, 0);
+
+  if (reduce) { build(Infinity); return; }
+
+  build(0);
+  let started = false;
+  new IntersectionObserver((es, obs) => {
+    if (!es[0].isIntersecting || started) return;
+    started = true;
+    obs.disconnect();
+    let n = 0;
+    (function step() {
+      build(n);
+      if (n >= totalChars) return;
+      // pausa maior nas quebras de linha, para dar respiro de "digitação"
+      const flat = tokens.map(t => t.t).join('');
+      const nextIsNL = flat[n] === '\n';
+      n++;
+      setTimeout(step, nextIsNL ? 130 : 16);
+    })();
+  }, { threshold: .4 }).observe(el);
+})();
+
+/* ---------- e-mail magnético no contato ---------- */
+if (fine && !reduce) {
+  document.querySelectorAll('[data-magnetic]').forEach(el => {
+    el.addEventListener('pointermove', e => {
+      const r = el.getBoundingClientRect();
+      const dx = e.clientX - (r.left + r.width / 2);
+      const dy = e.clientY - (r.top + r.height / 2);
+      el.style.transform = `translate(${(dx * 0.12).toFixed(1)}px, ${(dy * 0.18).toFixed(1)}px)`;
+    });
+    el.addEventListener('pointerleave', () => { el.style.transform = ''; });
+  });
+}

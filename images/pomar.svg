@@ -1,0 +1,5 @@
+<svg viewBox="0 0 1200 700" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="700" fill="#131316"/>
+  <rect x="0.5" y="0.5" width="1199" height="699" fill="none" stroke="#26262b"/>
+  <text x="600" y="350" text-anchor="middle" dominant-baseline="middle" font-family="monospace" font-size="28" fill="#8a8a93">pomar — imagem placeholder</text>
+</svg>

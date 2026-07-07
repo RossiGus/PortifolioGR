@@ -1,0 +1,16 @@
+{
+  "name": "portifas",
+  "version": "1.0.0",
+  "description": "Portfólio de desenvolvedor full-stack: página única, tema escuro, com animações reativas ao mouse e ao scroll. Sem frameworks e sem dependências: HTML, CSS e JavaScript puros.",
+  "main": "script.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "npx serve ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
