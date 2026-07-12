@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Projetos — Gustavo Rossi</title>
+<meta name="description" content="Todos os projetos de Gustavo Rossi." />
+<meta name="theme-color" content="#ece6d7" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23ece6d7'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%232a2fbe'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<script>try{var t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.dataset.theme=t;}catch(e){}</script>
+<noscript>
+  <style>
+    .reveal { opacity: 1; transform: none; }
+    .entry h3 { clip-path: none; }
+    .entry .folio, .entry .desc, .entry .tags, .entry .result { opacity: 1; transform: none; }
+  </style>
+</noscript>
+</head>
+<body data-page-title="titleProjects">
+
+<a class="skip" href="#conteudo" data-i18n="skip">Pular para o conteúdo</a>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="nameplate" href="index.html">Gustavo Rossi</a>
+    <div class="tools">
+      <nav class="nav" aria-label="Seções">
+        <a href="index.html#trabalho" data-i18n="navWork">Experiência</a>
+        <a href="projetos.html" data-i18n="navProjects">Projetos</a>
+        <a href="index.html#stack" data-i18n="navStack">Competências</a>
+        <a href="index.html#sobre" data-i18n="navAbout">Sobre</a>
+        <a href="index.html#contato" data-i18n="navContact">Contato</a>
+      </nav>
+      <div class="controls">
+        <button class="ctrl" id="lang-btn" type="button">EN</button>
+        <button class="ctrl ctrl-icon" id="theme-btn" type="button" aria-label="Modo escuro">☾</button>
+      </div>
+    </div>
+  </div>
+  <div class="reading-progress" aria-hidden="true"></div>
+</header>
+
+<div class="folio-ticker" aria-hidden="true"></div>
+
+<main id="conteudo">
+  <section class="work" id="projetos" aria-label="Projetos">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="reveal" data-i18n="projectsTitleAll">Todos os projetos</h2>
+        <span class="mono reveal" data-i18n="workMeta">Edição 2026</span>
+      </div>
+
+      <!-- TODO: trocar href="#" pela URL real do projeto -->
+      <a class="entry" href="#">
+        <div class="folio" data-i18n="e3folio">Projeto · Python · Keras</div>
+        <div>
+          <h3>Orbital Climate Intelligence</h3>
+          <p class="desc" data-i18n="e3desc">Pipeline de dados, treino de modelos e documentação de metodologia, resultados e decisões técnicas em relatório estruturado — equivalente a análise de requisitos e documentação funcional.</p>
+          <div class="tags"><span>Python</span><span>Keras</span><span data-i18n="tagML">Machine learning</span><span data-i18n="tagDoc">Documentação</span></div>
+        </div>
+        <div class="result"><span class="lbl" data-i18n="viewProject">Ver projeto ↗</span></div>
+      </a>
+
+      <!-- TODO: trocar href="#" pela URL real do projeto -->
+      <a class="entry" href="#">
+        <div class="folio" data-i18n="e4folio">Projeto · React Native · Node.js</div>
+        <div>
+          <h3>OrbitWatch</h3>
+          <p class="desc" data-i18n="e4desc">App mobile completo com integração de APIs e persistência de dados — evidencia capacidade de analisar fluxos de sistema e identificar pontos de falha.</p>
+          <div class="tags"><span>React Native</span><span>TypeScript</span><span>Node.js</span><span>APIs</span></div>
+        </div>
+        <div class="result"><span class="lbl" data-i18n="viewProject">Ver projeto ↗</span></div>
+      </a>
+
+      <a class="entry" href="https://carlosrogerio.vercel.app" target="_blank" rel="noopener">
+        <div class="folio" data-i18n="e5folio">Projeto · Parceria</div>
+        <div>
+          <h3>Carlos Rogério</h3>
+          <p class="desc" data-i18n="e5desc">Portfólio desenvolvido em parceria com Carlos Rogério.</p>
+          <div class="tags"><span data-i18n="tagDoc">Documentação</span></div>
+        </div>
+        <div class="result"><span class="lbl" data-i18n="viewProject">Ver projeto ↗</span></div>
+      </a>
+    </div>
+  </section>
+</main>
+
+<script src="script.js" defer></script>
+</body>
+</html>

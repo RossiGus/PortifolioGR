@@ -5,6 +5,7 @@ const fine = matchMedia('(pointer: fine)').matches;
 const I18N = {
   pt: {
     title: 'Gustavo Rossi — Suporte técnico & Análise de sistemas',
+    titleProjects: 'Projetos — Gustavo Rossi',
     metaDesc: 'Gustavo Rossi — suporte técnico especializado e análise de sistemas. Diagnóstico de problemas complexos, análise de causa raiz e documentação técnica.',
     skip: 'Pular para o conteúdo',
     navWork: 'Experiência', navProjects: 'Projetos', navStack: 'Competências', navAbout: 'Sobre', navContact: 'Contato',
@@ -22,8 +23,11 @@ const I18N = {
     e3desc: 'Pipeline de dados, treino de modelos e documentação de metodologia, resultados e decisões técnicas em relatório estruturado, equivalente a análise de requisitos e documentação funcional.',
     e4folio: 'Projeto · React Native · Node.js',
     e4desc: 'App mobile completo com integração de APIs e persistência de dados: evidencia capacidade de analisar fluxos de sistema e identificar pontos de falha.',
+    e5folio: 'Projeto · Parceria',
+    e5desc: 'Portfólio desenvolvido em parceria com Carlos Rogério.',
     tagSupport: 'Suporte técnico', tagRoot: 'Causa raiz', tagTicket: 'Tickets', tagDoc: 'Documentação',
     tagInv: 'Estoque', tagProc: 'Processos', tagML: 'Machine learning',
+    projectsTitleAll: 'Todos os projetos', viewAllProjects: 'Ver todos os projetos →', backHome: '← Voltar',
     manifesto: 'A resolução que fica é a que foi <em>documentada</em>. O resto volta como chamado novo.',
     stackTitle: 'Competências',
     viewProject: 'Ver projeto ↗',
@@ -44,6 +48,7 @@ const I18N = {
   },
   en: {
     title: 'Gustavo Rossi — Technical support & Systems analysis',
+    titleProjects: 'Projects — Gustavo Rossi',
     metaDesc: 'Gustavo Rossi — specialized technical support and systems analysis. Complex problem diagnosis, root-cause analysis and technical documentation.',
     skip: 'Skip to content',
     navWork: 'Experience', navProjects: 'Projects', navStack: 'Skills', navAbout: 'About', navContact: 'Contact',
@@ -61,8 +66,11 @@ const I18N = {
     e3desc: 'Data pipeline, model training and documentation of methodology, results and technical decisions in a structured report, equivalent to requirements analysis and functional documentation.',
     e4folio: 'Project · React Native · Node.js',
     e4desc: 'Full mobile app with API integration and data persistence: shows the ability to analyze system flows and pinpoint failure points.',
+    e5folio: 'Project · Partnership',
+    e5desc: 'Portfolio built in partnership with Carlos Rogério.',
     tagSupport: 'Technical support', tagRoot: 'Root cause', tagTicket: 'Tickets', tagDoc: 'Documentation',
     tagInv: 'Inventory', tagProc: 'Processes', tagML: 'Machine learning',
+    projectsTitleAll: 'All projects', viewAllProjects: 'View all projects →', backHome: '← Back',
     manifesto: 'The fix that lasts is the one that was <em>documented</em>. The rest comes back as a new ticket.',
     stackTitle: 'Skills',
     viewProject: 'View project ↗',
@@ -92,7 +100,7 @@ function applyLang(lang) {
   if (!d) return;
   currentLang = lang;
   document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
-  document.title = d.title;
+  document.title = document.body.dataset.pageTitle ? d[document.body.dataset.pageTitle] : d.title;
   const md = document.querySelector('meta[name="description"]');
   if (md) md.content = d.metaDesc;
   document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -123,8 +131,19 @@ function applyTheme(t) {
   }
   try { localStorage.setItem('theme', t); } catch (e) {}
 }
-if (themeBtn) themeBtn.addEventListener('click', () =>
-  applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'));
+if (themeBtn) themeBtn.addEventListener('click', (e) => {
+  const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  if (reduce || !document.startViewTransition) { applyTheme(next); return; }
+  const { clientX: x, clientY: y } = e;
+  const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+  const transition = document.startViewTransition(() => applyTheme(next));
+  transition.ready.then(() => {
+    document.documentElement.animate(
+      { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+      { duration: 500, easing: 'ease-in-out', pseudoElement: '::view-transition-new(root)' }
+    );
+  });
+});
 if (langBtn) langBtn.addEventListener('click', () =>
   applyLang(currentLang === 'pt' ? 'en' : 'pt'));
 
